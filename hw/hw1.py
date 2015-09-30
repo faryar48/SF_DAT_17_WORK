@@ -101,7 +101,7 @@ majors.Median.hist(by = majors.Major_category, sharex = True)
 # 9. What are the top 10 most UNemployed majors?
 # What are the unemployment rates?
 majors[['Major', 'Unemployed']].sort('Unemployed', ascending = False).head(10)
-unemployment_rate = majors.Unemployed / majors.Total 
+unemployment_rate = majors.Unemployed / majors.Total
 
 # 10. What are the top 10 most UNemployed majors CATEGORIES? Use the mean for each category
 # What are the unemployment rates?
@@ -113,6 +113,11 @@ unemployment_rate = majors.groupby('Major_category').Unemployed.mean() / majors.
 # call it "sample_employment_rate"
 # Example the first row has total: 128148 and employed: 90245. it's 
 # sample_employment_rate should be 90245.0 / 128148.0 = .7042
+sample_employment_rate = majors.Employed / majors.Total
 
 # 12. Create a "sample_unemployment_rate" column
 # this column should be 1 - "sample_employment_rate"
+majors['sample_employment_rate'] = sample_employment_rate
+majors.head()
+
+
