@@ -33,6 +33,8 @@ killings.fillna(value='Unknown', inplace=True)
 killings[(killings.year == 2015)].groupby('year').year.count()
 killings[(killings.year == 2015)].count()
 killings[(killings.year == 2015)].year.value_counts()
+# matt's addition:
+len(killings[killings.year == 2015])
 
 # 5. Of all killings, how many were male and how many female?
 killings.groupby('gender').count()
@@ -41,12 +43,20 @@ killings.gender.value_counts()
 # 6. How many killings were of unarmed people?
 killings.armed.value_counts()
 killings[(killings.armed == 'No')].count()
+# matt's addition:
+# I did the ['armed'] after the selection, so I would only return one count. If you try it without it, you return everything that can be counted (all columns), which is sort of redundant
+killings[(killings.armed == 'No')]['armed'].count()
 
 # 7. What percentage of all killings were unarmed?
 killings[(killings.armed == 'No')].count() / killings.shape[0]
+# matt's answer:
+killings[(killings.armed == 'No')]['armed'].count() / float(killings['armed'].count())
 
 # 8. What are the 5 states with the most killings?
 killings.state.value_counts()
+# matt's answer:
+state_killings = killings[['state', 'armed']].groupby('state').count()
+state_killings.sort('armed', ascending = False).head()
 
 # 9. Show a value counts of deaths for each race
 killings.race.value_counts()
@@ -74,6 +84,9 @@ majors.head()
 # 1. Delete the columns (employed_full_time_year_round, major_code)
 del majors['Employed_full_time_year_round']
 del majors['Major_code']
+# matt's solution:
+majors.drop(['Employed_full_time_year_round', 'Major_code'], axis = 1, inplace = True)
+majors.head(1) # to check if the column were dropped
 
 # 2. Show the cout of missing values in each column
 majors.isnull().sum()
@@ -94,6 +107,8 @@ majors.groupby('Major_category')[['Major_category', 'P75th']].mean().sort('P75th
 
 # 7. Plot a histogram of the distribution of median salaries
 majors.Median.hist(sharex = True)
+# matt says the sharex doesn't seem to work so solution:
+majors.Median.hist()
 
 # 8. Plot a histogram of the distribution of median salaries by major category
 majors.Median.hist(by = majors.Major_category, sharex = True)
@@ -102,6 +117,8 @@ majors.Median.hist(by = majors.Major_category, sharex = True)
 # What are the unemployment rates?
 majors[['Major', 'Unemployed']].sort('Unemployed', ascending = False).head(10)
 unemployment_rate = majors.Unemployed / majors.Total
+# matt says: There is an unemployment rate column in the dataframe that you could have used - you may have missed it:
+majors.sort('Unemployment_rate', ascending = False)[['Major', 'Unemployment_rate']].head(10)
 
 # 10. What are the top 10 most UNemployed majors CATEGORIES? Use the mean for each category
 # What are the unemployment rates?
@@ -111,7 +128,7 @@ unemployment_rate = majors.groupby('Major_category').Unemployed.mean() / majors.
 # 11. the total and employed column refer to the people that were surveyed.
 # Create a new column showing the emlpoyment rate of the people surveyed for each major
 # call it "sample_employment_rate"
-# Example the first row has total: 128148 and employed: 90245. it's 
+# Example the first row has total: 128148 and employed: 90245. it's
 # sample_employment_rate should be 90245.0 / 128148.0 = .7042
 sample_employment_rate = majors.Employed / majors.Total
 
